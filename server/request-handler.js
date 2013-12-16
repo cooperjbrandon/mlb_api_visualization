@@ -1,7 +1,6 @@
 var
   url     = require('url'),
   fs      = require('fs'),
-  path    = require('path'),
   qs      = require('qs');
 
 
@@ -10,7 +9,7 @@ var handleRequest = function(request, response){
   var pathname = url.parse(request.url).pathname;
   if(router[pathname]){
     var handler = router[pathname];
-    handler(request, response);
+    handler(request, response, pathname);
   } else {
     // 404
   }
@@ -18,22 +17,35 @@ var handleRequest = function(request, response){
 
 var headers = {};
 
-var basicFiles = function(request, response){
-  var ext = path.extname(asset);
-	headers['Content-Type'] = "text/html";
+var readFile = function(response, pathname) {
   response.writeHead(200, headers);
-  fs.readFile("../index.html", function (err, data) {
-      console.log("Read index.html");
-      if (err) {
-        response.writeHead(500, headers);
-        return response.end('Error loading index.html');
-      }
-      response.end(data);
-    });
+  pathname = '..' + pathname;
+  fs.readFile(pathname, function (err, data) {
+    if (err) {
+      response.writeHead(500, headers);
+      return response.end('Error loading' + pathname);
+    }
+    response.end(data);
+  });
+}
+
+var htmlFiles = function(request, response, pathname){
+	headers['Content-Type'] = "text/html";
+  if (pathname === '/') { pathname = '/index.html'; }
+  readFile(response, pathname);
+};
+
+var jsFiles = function(request, response, pathname) {
+  headers['Content-Type'] = "application/javascript";
+  readFile(response, pathname);
 };
 
 var router = {
-  '/': basicFiles
+  '/': htmlFiles,
+  '/templates/main.html': htmlFiles,
+  '/templates/MLB.html': htmlFiles,
+  '/client/app.js': jsFiles,
+  '/client/controller.js': jsFiles
 };
 
 exports.handleRequest = handleRequest;
