@@ -36,6 +36,7 @@ var router = {
   '/client/controller.js': jsFiles,
   '/client/httpStats.js': jsFiles,
   '/client/parseXML.js': jsFiles,
+  '/client/chart.js': jsFiles,
   '/stats': stats,
   '/pitchCount': pitchCount
 };

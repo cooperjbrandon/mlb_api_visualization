@@ -4,27 +4,18 @@
 		<meta charset="UTF-8"/>
 		<title>MLB API</title>
 		<style type="text/css">
-		.chart {
-			background: #eee;
-			padding: 3px;
-		}
-
-		.chart div {
-			width: 0;
-			transition: all 1s ease-out;
-			-moz-transition: all 1s ease-out;
-			-webkit-transition: all 1s ease-out;
-		}
-
-		.chart div {
-			font: 10px sans-serif;
-			background-color: steelblue;
-			text-align: right;
-			padding: 3px;
-			margin: 5px;
-			color: white;
-			box-shadow: 2px 2px 2px #666;
-		}	
+		.axis path, .axis line {
+            fill: none;
+            stroke: black;
+            shape-rendering: crispEdges;
+        }
+        .axis path{
+            fill: none;
+            stroke: none;
+        }
+        .bar {
+            fill: steelblue;
+        }
 		</style>
 	</head>
 	<body>
@@ -38,6 +29,7 @@
   	<script src="http://code.angularjs.org/1.2.5/angular-route.min.js"></script>
   	<script src="client/app.js"></script>
   	<script src="client/controller.js"></script>
+  	<script src="client/chart.js"></script>
   	<script src="client/httpStats.js"></script>
   	<script src="client/parseXML.js"></script>
 
