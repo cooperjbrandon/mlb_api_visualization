@@ -6,7 +6,8 @@ angular.module('mlbApp')
       var d = $q.defer();
       $http({
         method: 'GET',
-        url: '/stats'
+        url: '/stats',
+        params: {playerID: 430912}
       }).success(function(data) {
         d.resolve(data);
       }).error(function(reason) {

@@ -12,6 +12,7 @@ angular.module('mlbApp')
   	})
   	.then(function(stats) {
   			$scope.stats = JSON.parse(stats);
+  			console.log($scope.stats);
   	});
 	};
 })
