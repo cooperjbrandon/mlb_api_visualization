@@ -1,15 +1,15 @@
 angular.module('mlbApp')
-.controller('MainController', function AppCtrl ($scope, httpStats, parseXML) {
-	$scope.hello = "hi";
+.controller('MainController', function AppCtrl ($scope, httpStats, parseXML, pitchTypeCount, pitchMe) {
+	$scope.totalPitches = 0;
 	$scope.options = {width: 500, height: 300, 'bar': 'aaa'};
-  $scope.data = [1, 2, 3, 4];
-  $scope.circleData = {
+  $scope.data = [1,2,3,4];
+  $scope.circledata = [{
   	name: 'brandon',
   	region: 'america',
   	income: 20000,
   	population: 10000000,
   	lifeExpectancy: 57
-  };
+  }];
   $scope.hovered = function(d){
       $scope.barValue = d;
       $scope.$apply();
@@ -26,7 +26,8 @@ angular.module('mlbApp')
   	})
   	.then(function(stats) {
   		$scope.stats = JSON.parse(stats);
-  		console.log($scope.stats);
+  		$scope.pitchInfo = pitchMe.analyze($scope.stats);
+  		console.log($scope.pitchInfo);
   	});
 	};
 	$scope.pitchCount = function () {
@@ -40,6 +41,8 @@ angular.module('mlbApp')
   	})
   	.then(function(stats) {
   		$scope.pitch = JSON.parse(stats);
+  		$scope.totalPitches = pitchTypeCount.analyze($scope.pitch);
+  		console.log($scope.totalPitches);
   		console.log($scope.pitch);
   	});
 	};
@@ -98,12 +101,12 @@ angular.module('mlbApp')
 		replace: true,
 		template: '<div class="circleChart"></div>',
 		scope:{
-			circleData: '=circleData'
+			circledata: '=circledata'
 		},
 		link: function(scope, element, attrs) {
 			var chartEl = d3.select(element[0]);
 
-			scope.$watch('circleData', function (newVal, oldVal) {
+			scope.$watch('circledata', function (newVal, oldVal) {
 				chartEl.datum(newVal).call(chart);
 			});
 		}

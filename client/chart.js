@@ -295,13 +295,7 @@ d3.custom.circleChart = function module() {
 
 			  // Interpolates the dataset for the given (fractional) year.
 			  function interpolateData(year) {
-			    return [{
-							name: 'brandon',
-							region: 'america',
-							income: 20000,
-							population: 10000000,
-							lifeExpectancy: 57
-						}].map(function(d) {
+			    return _data.map(function(d) {
 			      return {
 			        name: d.name,
 			        region: d.region,
