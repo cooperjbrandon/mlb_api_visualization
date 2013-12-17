@@ -2,6 +2,7 @@ var
 	http  				= require('http'),
 	url   				= require('url'),
 	parseString 	= require('xml2js').parseString,
+	libxmljs = require("libxmljs"),
 	cainStarts  	= require('./cainSchedule').cainStarts;
 
 var headers = {};
@@ -9,7 +10,7 @@ var cain = {};
 var counter = 0;
 var year, month, day, home, away;
 
-headers['Content-Type'] = "application/json";
+headers['Content-Type'] = "text/xml";
 
 var gamedayRequest = function(request, response, path) {
 	console.log('sending request out for path: ' + path);
@@ -25,16 +26,8 @@ var gamedayRequest = function(request, response, path) {
 			data += chunk;
 		});
 		result.on('end', function() {
-			parseString(data, function (err, result) {
-				cain[counter] = result;
-				counter++;
-				console.log(counter);
-				if (counter === cainStarts.length) {
-					counter = 0;
-					response.writeHead(200, headers);
-					response.end(JSON.stringify(cain));
-				}
-			});
+			response.writeHead(200, headers);
+			response.end(data);
 		});
 	}).on('error', function(e) {
 		console.log("Error: " + options.host + "\n" + e.message); 
@@ -43,35 +36,31 @@ var gamedayRequest = function(request, response, path) {
 
 };
 
-var setCainSchedule = function() {
-	for (var i = 0; i < cainStarts.length; i++) {
+var stats = function(request, response) {
+	for (var i = 0; i < 1; i++) {
 	  year = cainStarts[i].year;
 	  month = cainStarts[i].month;
 	  day = cainStarts[i].day;
 	  home = cainStarts[i].homeTeam;
 	  away = cainStarts[i].awayTeam;
-};
-
-var loopRequest = function(request, response, path) {
-	for (var i = 0; i < cainStarts.length; i++) {
+	  var path = '/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day + '/gid_' + year + '_' + month + '_' + day + '_' + away + '_' + home + '_1/inning/inning_all.xml';
 		gamedayRequest(request, response, path);
 	}
-}
-
-
-var stats = function(request, response) {
-		setCainSchedule();
-	  var path = '/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day + '/gid_' + year + '_' + month + '_' + day + '_' + away + '_' + home + '_1/inning/inning_all.xml';
-		loopRequest(request, response, path);
 };
 
 var pitchCount = function(request, response) {
-		setCainSchedule();
-		var id = url.parse(request.url, true).query.playerID;
+	var id = url.parse(request.url, true).query.playerID;
+	for (var i = 0; i < 1; i++) {
+	  year = cainStarts[i].year;
+	  month = cainStarts[i].month;
+	  day = cainStarts[i].day;
+	  home = cainStarts[i].homeTeam;
+	  away = cainStarts[i].awayTeam;
 	  var path = '/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day + '/gid_' + year + '_' + month + '_' + day + '_' + away + '_' + home + '_1/premium/pitchers/' + id + '/pitchtendencies_game.xml';
-		loopRequest(request, response, path);
+		gamedayRequest(request, response, path);
+	}
 };
 
 exports.stats = stats;
-exports.pitchCount = pitchCount
+exports.pitchCount = pitchCount;
 

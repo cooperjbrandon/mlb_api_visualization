@@ -3,10 +3,14 @@
 <span>{{ hello }}</span>
 
 <button ng-click="stats()" class="button">Get Stats</button>
+<button ng-click="pitchCount()" class="button">Get PitchCount</button>
 
-<div></div>
+<span> {{ pitch.pitchtendencies.game.types.type[0]['@num'] }}</span>
+<div>
+   <gh-visualization val="data"></gh-visualization>
+   <bars data="40,4,55,15,16,33,52,20"></bars>
+</div>
 
-<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 
 <!-- Pitch Type Codes
    FS = Splitter

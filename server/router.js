@@ -1,6 +1,6 @@
 var
   fs           = require('fs'),
-  stats        = require('./server_stat_getter').stats;
+  stats        = require('./server_stat_getter').stats,
   pitchCount   = require('./server_stat_getter').pitchCount;
 
 var headers = {};
