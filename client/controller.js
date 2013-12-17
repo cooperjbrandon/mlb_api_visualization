@@ -3,11 +3,11 @@ angular.module('mlbApp')
 	$scope.hello = "hi";
 	$scope.options = {width: 500, height: 300, 'bar': 'aaa'};
   $scope.data = [1, 2, 3, 4];
-  // $scope.hovered = function(d){
-  //     $scope.barValue = d;
-  //     $scope.$apply();
-  // };
-  // $scope.barValue = 'None';
+  $scope.hovered = function(d){
+      $scope.barValue = d;
+      $scope.$apply();
+  };
+  $scope.barValue = 'None';
 	$scope.stats = function () {
 		httpStats.getStats()
   	.then(function(data) {
@@ -59,6 +59,7 @@ angular.module('mlbApp')
 			});
 
 			scope.$watch('data', function (newVal, oldVal) {
+				console.log('data has changed');
 				chartEl.datum(newVal).call(chart);
 			});
 

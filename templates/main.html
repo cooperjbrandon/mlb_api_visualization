@@ -6,7 +6,10 @@
 <button ng-click="pitchCount()" class="button">Get PitchCount</button>
 
 <span> {{ pitch.pitchtendencies.game.types.type[0]['@num'] }}</span>
+
+<input type="number" name="usrname" ng-model="data[3]">{{data}}</input>
 <div>
+   <chart-form></chart-form>
    <bar-chart height="options.height" data="data" hovered="hovered(args)"></bar-chart>
 </div>
 
