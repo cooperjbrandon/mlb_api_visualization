@@ -1,16 +1,17 @@
-var http  = require('http');
-var url   = require('url');
-var parseString = require('xml2js').parseString;
-var cainStarts  = require('./cainSchedule').cainStarts;
+var 
+	http  				= require('http'),
+	url   				= require('url'),
+	parseString 	= require('xml2js').parseString,
+	cainStarts  	= require('./cainSchedule').cainStarts;
 
 var headers = {};
 var cain = {};
 var counter = 0;
+var year, month, day, home, away;
 
 headers['Content-Type'] = "application/json";
 
 var gamedayRequest = function(request, response, path) {
-	var id = url.parse(request.url, true).query.playerID;
 	console.log('sending request out for path: ' + path);
 	var data = '';
 
@@ -42,17 +43,35 @@ var gamedayRequest = function(request, response, path) {
 
 };
 
-var stats = function(request, response) {
+var setCainSchedule = function() {
 	for (var i = 0; i < cainStarts.length; i++) {
-	  var year = cainStarts[i].year;
-	  var month = cainStarts[i].month;
-	  var day = cainStarts[i].day;
-	  var home = cainStarts[i].homeTeam;
-	  var away = cainStarts[i].awayTeam;
-	  var path = '/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day + '/gid_' + year + '_' + month + '_' + day + '_' + away + '_' + home + '_1/inning/inning_all.xml';
+	  year = cainStarts[i].year;
+	  month = cainStarts[i].month;
+	  day = cainStarts[i].day;
+	  home = cainStarts[i].homeTeam;
+	  away = cainStarts[i].awayTeam;
+};
+
+var loopRequest = function(request, response, path) {
+	for (var i = 0; i < cainStarts.length; i++) {
 		gamedayRequest(request, response, path);
 	}
+}
+
+
+var stats = function(request, response) {
+		setCainSchedule();
+	  var path = '/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day + '/gid_' + year + '_' + month + '_' + day + '_' + away + '_' + home + '_1/inning/inning_all.xml';
+		loopRequest(request, response, path);
+};
+
+var pitchCount = function(request, response) {
+		setCainSchedule();
+		var id = url.parse(request.url, true).query.playerID;
+	  var path = '/components/game/mlb/year_' + year + '/month_' + month + '/day_' + day + '/gid_' + year + '_' + month + '_' + day + '_' + away + '_' + home + '_1/premium/pitchers/' + id + '/pitchtendencies_game.xml';
+		loopRequest(request, response, path);
 };
 
 exports.stats = stats;
+exports.pitchCount = pitchCount
 

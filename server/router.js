@@ -1,6 +1,7 @@
 var
-  fs      = require('fs'),
-  stats   = require('./server_stat_getter').stats;
+  fs           = require('fs'),
+  stats        = require('./server_stat_getter').stats;
+  pitchCount   = require('./server_stat_getter').pitchCount;
 
 var headers = {};
 
@@ -35,7 +36,8 @@ var router = {
   '/client/controller.js': jsFiles,
   '/client/httpStats.js': jsFiles,
   '/client/parseXML.js': jsFiles,
-  '/stats': stats
+  '/stats': stats,
+  '/pitchCount': pitchCount
 };
 
 exports.router = router;
