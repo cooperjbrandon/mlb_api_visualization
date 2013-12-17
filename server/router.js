@@ -33,6 +33,8 @@ var router = {
   '/templates/MLB.html': htmlFiles,
   '/client/app.js': jsFiles,
   '/client/controller.js': jsFiles,
+  '/client/httpStats.js': jsFiles,
+  '/client/parseXML.js': jsFiles,
   '/stats': stats
 };
 

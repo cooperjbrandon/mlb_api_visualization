@@ -2,13 +2,13 @@ var http  = require('http');
 
 var headers = {};
 
-headers['Content-Type'] = "application/json";
+headers['Content-Type'] = "text/xml";
 
 var stats = function(request, response, pathname) {
   var data = '';
   var options = {
     host: 'gd2.mlb.com',
-    path: '/components/game/mlb/year_2013/month_08/day_16/gid_2013_08_16_kcamlb_detmlb_1/boxscore.json'
+    path: '/components/game/mlb/year_2012/month_08/day_22/gid_2012_08_22_sfnmlb_lanmlb_1/inning/inning_all.xml'
   };
 
   http.get(options, function(result) {

@@ -1,13 +1,17 @@
 angular.module('mlbApp')
-.controller('MainController', function($scope, $http) {
+.controller('MainController', function($scope, httpStats, parseXML) {
 	$scope.hello = "hi";
 	$scope.stats = function () {
-		$http({
-    	method: 'GET',
-    	url: '/stats'
-  	})
+		httpStats.getStats()
   	.then(function(data) {
-  		$scope.stats = data.data;
+  		return data;
+  	})
+  	.then(function(xml) {
+  		var json = parseXML.xml2json(xml, '			');
+  		return json;
+  	})
+  	.then(function(stats) {
+  			$scope.stats = JSON.parse(stats);
   	});
 	};
 })
