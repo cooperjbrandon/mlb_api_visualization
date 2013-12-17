@@ -3,7 +3,13 @@ angular.module('mlbApp')
 	$scope.hello = "hi";
 	$scope.options = {width: 500, height: 300, 'bar': 'aaa'};
   $scope.data = [1, 2, 3, 4];
-  $scope.circleData = {};
+  $scope.circleData = {
+  	name: 'brandon',
+  	region: 'america',
+  	income: 20000,
+  	population: 10000000,
+  	lifeExpectancy: 57
+  };
   $scope.hovered = function(d){
       $scope.barValue = d;
       $scope.$apply();
@@ -97,13 +103,9 @@ angular.module('mlbApp')
 		link: function(scope, element, attrs) {
 			var chartEl = d3.select(element[0]);
 
-			scope.$watch('data', function (newVal, oldVal) {
+			scope.$watch('circleData', function (newVal, oldVal) {
 				chartEl.datum(newVal).call(chart);
 			});
-
-			scope.$watch('height', function(d, i){
-				chartEl.call(chart.height(scope.height));
-			})
 		}
 	}
 });

@@ -131,6 +131,8 @@ circles.enter().append("circle")
 
 d3.custom.circleChart = function module() {
 	function exports(_selection) {
+
+		// Load the data.
 		_selection.each(function(_data) {
 
 		// Various accessors that specify the four dimensions of data to visualize.
@@ -198,8 +200,8 @@ d3.custom.circleChart = function module() {
 			    .attr("x", width)
 			    .text(1800);
 
-			// Load the data.
-			d3.json("nations.json", function(nations) {
+			
+
 
 			  // A bisector since many nation's data is sparsely-defined.
 			  var bisect = d3.bisector(function(d) { return d[0]; });
@@ -293,13 +295,19 @@ d3.custom.circleChart = function module() {
 
 			  // Interpolates the dataset for the given (fractional) year.
 			  function interpolateData(year) {
-			    return nations.map(function(d) {
+			    return [{
+							name: 'brandon',
+							region: 'america',
+							income: 20000,
+							population: 10000000,
+							lifeExpectancy: 57
+						}].map(function(d) {
 			      return {
 			        name: d.name,
 			        region: d.region,
-			        income: interpolateValues(d.income, year),
-			        population: interpolateValues(d.population, year),
-			        lifeExpectancy: interpolateValues(d.lifeExpectancy, year)
+			        income: d.income,
+			        population: d.population,
+			        lifeExpectancy: d.lifeExpectancy
 			      };
 			    });
 			  }
@@ -315,7 +323,6 @@ d3.custom.circleChart = function module() {
 			    }
 			    return a[1];
 			  };
-			});
 		});
 	};
 	return exports;
