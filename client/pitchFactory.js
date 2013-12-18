@@ -20,11 +20,7 @@ angular.module('mlbApp')
 	var service = {
 		analyze: function(pitch) {
 			
-			var pitchData = {};
-			pitchData.break_length = [];
-			pitchData.pitch_type = [];
-			pitchData.result = [];
-			pitchData.start_speed = [];
+			var pitchData = [];
 
 			var counter = 0;
 
@@ -40,10 +36,12 @@ angular.module('mlbApp')
 				for (var a = 0; a < batters.length; a++) {
 					var pitches = batters[a].pitch;
 					for (var k = 0; k < pitches.length; k++) {
-						pitchData.break_length[counter] = pitches[k]['@break_length'];
-						pitchData.pitch_type[counter] = pitches[k]['@pitch_type'];
-						pitchData.result[counter] = pitches[k]['@type'];
-						pitchData.start_speed[counter] = pitches[k]['@start_speed'];
+						pitchData[counter] = {};
+						pitchData[counter].break_length = parseInt(pitches[k]['@break_length']);
+						pitchData[counter].pitch_type = pitches[k]['@pitch_type'];
+						pitchData[counter].result = pitches[k]['@type'];
+						pitchData[counter].start_speed = parseInt(pitches[k]['@start_speed']);
+						pitchData[counter].description = pitches[k]['@des'];
 						counter++;
 					}
 				}

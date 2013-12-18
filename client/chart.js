@@ -11,7 +11,6 @@ d3.custom.barChart = function module() {
     var dispatch = d3.dispatch('customHover');
     function exports(_selection) {
         _selection.each(function(_data) {
-
             var chartW = width - margin.left - margin.right,
                 chartH = height - margin.top - margin.bottom;
 
@@ -113,34 +112,18 @@ d3.custom.barChart = function module() {
     return exports;
 };
 
-
-var width = window.innerWidth * 0.65;
-var height = window.innerHeight * 0.65;
-
-var svg = d3.select("div").append("svg")
-.attr("width", width)
-.attr("height", height);
-
-
-var circles = svg.selectAll("circle").data([[150,150]]);
-circles.enter().append("circle")
-  .attr("cx", function(d) { return d[0]; })
-  .attr("cy", function(d) { return d[1]; })
-  .attr("r", 40)
-  .attr("class", "circles");
-
 d3.custom.circleChart = function module() {
 	function exports(_selection) {
-
 		// Load the data.
 		_selection.each(function(_data) {
+console.log(_data)
 
 		// Various accessors that specify the four dimensions of data to visualize.
-			var x = function (d) { return d.income; }
-			var y = function (d) { return d.lifeExpectancy; }
-			var radius = function (d) { return d.population; }
-			var color = function (d) { return d.region; }
-			var key = function (d) { return d.name; }
+			function x(d) { return d.start_speed; }
+			function y(d) { return d.break_length; }
+			function radius(d) { return d.result; }
+			function color(d) { return d.pitch_type; }
+			function key(d) { return d.description; }
 
 			// Chart dimensions.
 			var margin = {top: 19.5, right: 19.5, bottom: 19.5, left: 39.5},
@@ -148,13 +131,13 @@ d3.custom.circleChart = function module() {
 			    height = 500 - margin.top - margin.bottom;
 
 			// Various scales. These domains make assumptions of data, naturally.
-			var xScale = d3.scale.log().domain([300, 1e5]).range([0, width]),
-			    yScale = d3.scale.linear().domain([10, 85]).range([height, 0]),
+			var xScale = d3.scale.linear().domain([70, 105]).range([0, width]),
+			    yScale = d3.scale.linear().domain([2, 12]).range([height, 0]),
 			    radiusScale = d3.scale.sqrt().domain([0, 5e8]).range([0, 40]),
 			    colorScale = d3.scale.category10();
 
 			// The x & y axes.
-			var xAxis = d3.svg.axis().orient("bottom").scale(xScale).ticks(12, d3.format(",d")),
+			var xAxis = d3.svg.axis().orient("bottom").scale(xScale).ticks(20),
 			    yAxis = d3.svg.axis().scale(yScale).orient("left");
 
 			// Create the SVG container and set the origin.
@@ -181,7 +164,7 @@ d3.custom.circleChart = function module() {
 			    .attr("text-anchor", "end")
 			    .attr("x", width)
 			    .attr("y", height - 6)
-			    .text("income per capita, inflation-adjusted (dollars)");
+			    .text("velocity of pitch (MPH)");
 
 			// Add a y-axis label.
 			svg.append("text")
@@ -190,7 +173,7 @@ d3.custom.circleChart = function module() {
 			    .attr("y", 6)
 			    .attr("dy", ".75em")
 			    .attr("transform", "rotate(-90)")
-			    .text("life expectancy (years)");
+			    .text("length of break of pitch (inches)");
 
 			// Add the year label; the value is set on transition.
 			var label = svg.append("text")
@@ -198,7 +181,7 @@ d3.custom.circleChart = function module() {
 			    .attr("text-anchor", "end")
 			    .attr("y", height - 24)
 			    .attr("x", width)
-			    .text(1800);
+			    .text(1);
 
 			
 
@@ -210,7 +193,7 @@ d3.custom.circleChart = function module() {
 			  var dot = svg.append("g")
 			      .attr("class", "dots")
 			    .selectAll(".dot")
-			      .data(interpolateData(1800))
+			      .data(interpolateData(0))
 			    .enter().append("circle")
 			      .attr("class", "dot")
 			      .style("fill", function(d) { return colorScale(color(d)); })
@@ -234,7 +217,7 @@ d3.custom.circleChart = function module() {
 
 			  // Start a transition that interpolates the data based on year.
 			  svg.transition()
-			      .duration(30000)
+			      .duration(20000)
 			      .ease("linear")
 			      .tween("year", tweenYear)
 			      .each("end", enableInteraction);
@@ -254,7 +237,7 @@ d3.custom.circleChart = function module() {
 			  // After the transition finishes, you can mouseover to change the year.
 			  function enableInteraction() {
 			    var yearScale = d3.scale.linear()
-			        .domain([1800, 2009])
+			        .domain([0, 86])
 			        .range([box.x + 10, box.x + box.width - 10])
 			        .clamp(true);
 
@@ -283,7 +266,7 @@ d3.custom.circleChart = function module() {
 			  // Tweens the entire chart by first tweening the year, and then the data.
 			  // For the interpolated data, the dots and label are redrawn.
 			  function tweenYear() {
-			    var year = d3.interpolateNumber(1800, 2009);
+			    var year = d3.interpolateNumber(0, 86);
 			    return function(t) { displayYear(year(t)); };
 			  }
 
@@ -295,15 +278,25 @@ d3.custom.circleChart = function module() {
 
 			  // Interpolates the dataset for the given (fractional) year.
 			  function interpolateData(year) {
-			    return _data.map(function(d) {
+			  	debugger;
+			  	year = Math.floor(year);
 			      return {
-			        name: d.name,
-			        region: d.region,
-			        income: d.income,
-			        population: d.population,
-			        lifeExpectancy: d.lifeExpectancy
+			        result: getRadius(_data[year].result),
+			        pitch_type: _data[year].pitch_type,
+			        start_speed: _data[year].start_speed,
+			        break_length: _data[year].break_length,
+			        description: _data[year].description
 			      };
-			    });
+			  }
+
+			  function getRadius(result) {
+			  	var radius;
+
+			  	if (result === 'S') { radius = 30; }
+			  	else if (result === 'B') { radius = 20; }
+			  	else { radius = 30; }
+
+			  	return radius;
 			  }
 
 			  // Finds (and possibly interpolates) the value for the specified year.
